@@ -1,101 +1,134 @@
-import Image from "next/image";
+import { Button } from '@/components/ui/button';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { cn } from '@/lib/utils';
+
+function getTimeFromIndex(index: number) {
+  // 시작 시간 설정
+  const startTime = new Date();
+  startTime.setHours(9, 0, 0, 0); // 9:00
+
+  // 30분씩 더하기
+  const newTime = new Date(startTime.getTime() + index * 30 * 60 * 1000);
+
+  // 시간 형식 반환 (HH:MM)
+  const hours = newTime.getHours().toString().padStart(2, '0');
+  const minutes = newTime.getMinutes().toString().padStart(2, '0');
+
+  return `${hours}:${minutes}`;
+}
+
+function MyTableRow({ data }: any) {
+  return (
+    <TableRow className={cn('divide-x-[1px]')}>
+      <TableCell>{getTimeFromIndex(data.index)}</TableCell>
+      <TableCell></TableCell>
+      <TableCell></TableCell>
+      <TableCell></TableCell>
+      <TableCell></TableCell>
+    </TableRow>
+  );
+}
+
+function MyTable() {
+  const repeatList = Array.from({ length: 20 });
+  return (
+    <Table className='border'>
+      <TableHeader>
+        <TableRow className={cn('divide-x-[1px]', '*:text-accent *:bg-accent-foreground')}>
+          <TableHead>시간</TableHead>
+          <TableHead>강의실 1</TableHead>
+          <TableHead>강의실 2</TableHead>
+          <TableHead>강의실 3</TableHead>
+          <TableHead>강의실 4</TableHead>
+        </TableRow>
+      </TableHeader>
+
+      <TableBody>
+        {repeatList.map((el: any, i: number) => {
+          return <MyTableRow key={i} data={{ ...el, index: i }} />;
+        })}
+      </TableBody>
+    </Table>
+  );
+}
+
+function ContentHeader() {
+  return (
+    <div className='flex gap-4 items-center justify-center mb-4'>
+      <Button>이전</Button>
+      <h2>2024-11-10</h2>
+      <Button>다음</Button>
+    </div>
+  );
+}
+
+function Controller() {
+  const reservations = [1, 2, 3, 4, 5];
+  return (
+    <>
+      <div className='h-[2.25rem] flex justify-center items-center relative mb-4'>
+        <div className='flex-grow text-center'>다음 예약</div>
+        <Button>자동배치</Button>
+      </div>
+
+      <div className='flex flex-col gap-4'>
+        <ScrollArea className='h-[calc(50vh-60px)]'>
+          {reservations.map((el, i) => (
+            <div key={i} className='h-32 bg-slate-500 mt-2 first:mt-0'>
+              <div className='flex justify-between px-4 py-2'>
+                <div>홍길동</div>
+                <div>010-1234-1234</div>
+              </div>
+              <div>저번 시간 진도</div>
+            </div>
+          ))}
+        </ScrollArea>
+
+        <ScrollArea className='h-[calc(50vh-60px)]'>
+          <div className='flex items-center justify-between mb-4'>
+            <div className='flex-grow text-center'>예약 시간 11:00 ~ 12:00</div>
+            <Button>저장</Button>
+          </div>
+          <div className='flex mb-4'>
+            <div className='flex-1 mr-4'>
+              <AspectRatio ratio={7 / 9} className='bg-teal-200'>
+                <img
+                  src='https://media2.dev.to/dynamic/image/width=800%2Cheight=%2Cfit=scale-down%2Cgravity=auto%2Cformat=auto/https%3A%2F%2Frobohash.org%2Fmail%40ashallendesign.co.uk'
+                  alt='Image'
+                  className='rounded-md object-cover h-full'
+                />
+              </AspectRatio>
+            </div>
+            <div className='flex flex-col flex-1 gap-2'>
+              <div>이름</div>
+              <div>전화번호</div>
+              <div>이용권</div>
+              <div>이용권 종료기간 + 잔여시간</div>
+            </div>
+          </div>
+          <div className='mb-4'>회원 메모</div>
+          <div>진도표</div>
+        </ScrollArea>
+      </div>
+    </>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className='p-2 flex justify-center'>
+      <div className='container flex p-2 gap-4 2xl:max-w-[1820px]'>
+        <div className='flex-[2_0_0] max-w-96 bg-red-100'></div>
+        <div className='flex-[9_0_0]'>
+          <ContentHeader />
+          <MyTable />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <div className='flex-[4_0_0] max-w-96 flex-col'>
+          <Controller />
+        </div>
+      </div>
     </div>
   );
 }
